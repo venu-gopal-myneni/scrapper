@@ -4,7 +4,7 @@ from datetime import date
 import os
 
 
-date_today = date(year=2026, month=1, day=23) #date.today()
+date_today = date.today() # date(year=2026, month=1, day=23) 
 date_folder = date_today.strftime("%d-%m-%Y")
 formatted_date_today_ddmmyy = date_today.strftime("%d%m%y")
 formatted_date_today_ddmmyyyy = date_today.strftime("%d%m%Y")

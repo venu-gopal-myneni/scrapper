@@ -4,7 +4,7 @@ import requests
 from io import BytesIO
 from collections import defaultdict
 
-from utils import s3_client
+from utils import S3_CLIENT
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -39,12 +39,12 @@ def download_files(urls: list[str], date_today: str, bucket: str) -> dict:
                         name = name.translate(str.maketrans("", "", "0123456789"))
                         key = f"raw/{date_today}/{folder}/{name}"
                         print(f"Uploading file {key} to bucket {bucket}")
-                        s3_client.upload_fileobj(f, bucket, key)
+                        S3_CLIENT.upload_fileobj(f, bucket, key)
                         keys_dict[folder].append(key)
         elif content_type == "csv":
             key = f"raw/{date_today}/{folder}.csv"
             print(f"Uploading file {key} to bucket {bucket}")
-            s3_client.upload_fileobj(buffer, bucket, key)
+            S3_CLIENT.upload_fileobj(buffer, bucket, key)
             keys_dict[folder].append(key)
     return keys_dict
 

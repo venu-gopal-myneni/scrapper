@@ -4,7 +4,7 @@ from datetime import date
 import os
 
 
-date_today = date.today() # date(year=2026, month=1, day=23) 
+date_today = date.today()  # date(year=2026, month=1, day=23)
 date_folder = date_today.strftime("%d-%m-%Y")
 formatted_date_today_ddmmyy = date_today.strftime("%d%m%y")
 formatted_date_today_ddmmyyyy = date_today.strftime("%d%m%Y")
@@ -20,11 +20,13 @@ URLS = {
 }
 
 
-
 def main():
     extract_keys_dict = download_files(URLS, date_folder, BUCKET)
     print(f"Extract Keys Dict : \n {extract_keys_dict}")
-    validate_files(extract_keys_dict,SCHEMA_DICT, DROP_EMPTY_STR_ROWS, date_folder, BUCKET)
+    validate_files(
+        extract_keys_dict, SCHEMA_DICT, DROP_EMPTY_STR_ROWS, date_folder, BUCKET
+    )
+
 
 if __name__ == "__main__":
     main()

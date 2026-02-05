@@ -1,50 +1,50 @@
 import os
 import boto3
 from dotenv import load_dotenv
+import duckdb
+
 
 load_dotenv()
 
 BUCKET = os.getenv("S3_BUCKET")
-S3_REGION=os.getenv("S3_REGION")
-S3_ACCESS_KEY_ID=os.getenv("S3_ACCESS_KEY_ID")
-S3_SECRET_ACCESS_KEY=os.getenv("S3_SECRET_ACCESS_KEY")
+AWS_PROFILE = os.getenv("AWS_PROFILE")
 
-s3_client = boto3.client("s3")
-
-import duckdb
-
-con = duckdb.connect()
-
-# Install DuckLake extension
-con.execute("INSTALL ducklake;")
-print("Installed ducklake")
-con.execute("LOAD ducklake;")
-
-# Set AWS credentials (or use IAM role if on EC2)
-con.execute(f"""
-SET s3_region={S3_REGION};
-SET s3_access_key_id={S3_ACCESS_KEY_ID};
-SET s3_secret_access_key={S3_SECRET_ACCESS_KEY};
-""")
-print("Set secrets")
+S3_CLIENT = boto3.client("s3")
 
 
-con.execute(f"""
-ATTACH 'ducklake:s3://{BUCKET}/ducklake/catalog.duckdb'
-AS lake
-(DATA_PATH 's3://{BUCKET}/ducklake/data/');
-""")
-print("Attached ducklake")
+def get_extensions():
+    out = set()
+    con = duckdb.connect()
+
+    exts = con.execute("""
+    SELECT extension_name
+    FROM duckdb_extensions()
+    WHERE installed = true
+    """).fetchall()
+
+    for (ext,) in exts:
+        out.add(ext)
+    return out
 
 
-con.execute("USE lake")
-con.execute("""
-CREATE TABLE events (
-    id INTEGER,
-    event_name TEXT,
-    event_time TIMESTAMP
-);
-""")
-print("Created table")
+def get_ducklake_conn():
+    con = duckdb.connect()
 
+    con.execute("LOAD ducklake")
 
+    con.execute(f"""
+    CREATE OR REPLACE SECRET secret (TYPE s3,PROVIDER credential_chain,CHAIN config,PROFILE '{AWS_PROFILE}');
+                """)
+
+    # catalog_path = f"s3://{BUCKET}/ducklake/catalog.ducklake"
+    catalog_path = "catalog.ducklake"
+    data_path = f"s3://{BUCKET}/ducklake/data/"
+
+    con.execute(f"""
+    ATTACH 'ducklake:{catalog_path}'
+    AS lake
+    (DATA_PATH '{data_path}');
+    """)
+
+    con.execute("USE lake")
+    return con

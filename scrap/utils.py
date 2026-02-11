@@ -48,3 +48,31 @@ def get_ducklake_conn():
 
     con.execute("USE lake")
     return con
+
+def create_table(con):
+    con.execute("DROP TABLE pd;")
+    out = con.execute("""
+        CREATE TABLE pd (
+            date DATE,
+            market VARCHAR(2),
+            series VARCHAR(4),
+            symbol VARCHAR(20),
+            security VARCHAR(20),
+            prev_close FLOAT,
+            open_price FLOAT,
+            high_price FLOAT,
+            low_prrice FLOAT,
+            close_price FLOAT,
+            net_trade_val FLOAT,
+            net_trade_qty FLOAT,
+            ind_sec VARCHAR(1),
+            corp_ind VARCHAR(4),
+            num_trades FLOAT,
+            high_52_wk FLOAT,
+            low_52_wk FLOAT,
+            source_file VARCHAR(250),
+            created_at TIMESTAMP 
+        );
+""")
+
+    print(out)

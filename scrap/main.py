@@ -1,5 +1,6 @@
 from extract import download_files
 from validate import validate_files, DROP_EMPTY_STR_ROWS, SCHEMA_DICT
+from ingest import merge_into
 from datetime import date
 import os
 
@@ -26,6 +27,7 @@ def main():
     validate_files(
         extract_keys_dict, SCHEMA_DICT, DROP_EMPTY_STR_ROWS, date_folder, BUCKET
     )
+    merge_into(BUCKET, date_today)
 
 
 if __name__ == "__main__":

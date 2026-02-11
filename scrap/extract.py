@@ -46,7 +46,7 @@ def download_files(urls: list[str], date_today: str, bucket: str) -> dict:
             print(f"Uploading file {key} to bucket {bucket}")
             S3_CLIENT.upload_fileobj(buffer, bucket, key)
             keys_dict[folder].append(key)
-    return keys_dict
+    return dict(keys_dict)
 
 
 def get_content_type(resp):

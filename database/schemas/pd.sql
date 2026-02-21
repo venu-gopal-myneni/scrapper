@@ -4,7 +4,7 @@ CREATE TABLE pd (
     series VARCHAR(4),
     symbol VARCHAR(20),
     security VARCHAR(20),
-    prev_close FLOAT,
+    prev_close_price FLOAT,
     open_price FLOAT,
     high_price FLOAT,
     low_prrice FLOAT,
@@ -31,7 +31,7 @@ USING (
   ) AS 'date'
     FROM read_parquet('s3://my-bucket/incoming/customers/*.parquet')
 ) AS s
-ON (t.date = s.date AND t.market = s.market)
+ON (t.symbol = s.symbol AND t.series = s.series)
 
 WHEN MATCHED THEN UPDATE 
 WHEN NOT MATCHED THEN INSERT ;

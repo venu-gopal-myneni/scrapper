@@ -1,11 +1,14 @@
 from extract import download_files
-from validate import validate_files, DROP_EMPTY_STR_ROWS, SCHEMA_DICT
-from ingest import merge_into
+from validate import validate_files, FOLDER_FILE_TRANSFORMS
+
+from ingest import merge_into_pd_table, merge_into_sec_table
 from datetime import date
 import os
 
 
-date_today = date.today()  # date(year=2026, month=1, day=23)
+date_today = date(
+    year=2026, month=2, day=20
+)  # date.today()  # date(year=2026, month=1, day=23)
 date_folder = date_today.strftime("%d-%m-%Y")
 formatted_date_today_ddmmyy = date_today.strftime("%d%m%y")
 formatted_date_today_ddmmyyyy = date_today.strftime("%d%m%Y")
@@ -24,10 +27,9 @@ URLS = {
 def main():
     extract_keys_dict = download_files(URLS, date_folder, BUCKET)
     print(f"Extract Keys Dict : \n {extract_keys_dict}")
-    validate_files(
-        extract_keys_dict, SCHEMA_DICT, DROP_EMPTY_STR_ROWS, date_folder, BUCKET
-    )
-    merge_into(BUCKET, date_today)
+    validate_files(extract_keys_dict, FOLDER_FILE_TRANSFORMS, date_folder, BUCKET, False)
+    merge_into_pd_table(BUCKET, date_folder)
+    merge_into_sec_table(BUCKET, date_folder)
 
 
 if __name__ == "__main__":

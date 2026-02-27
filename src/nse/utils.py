@@ -51,9 +51,9 @@ def get_ducklake_conn():
 
 
 def create_tables(con):
-    con.execute("DROP TABLE IF EXISTS pd;")
+    # con.execute("DROP TABLE IF EXISTS pd;")
     out = con.execute("""
-        CREATE TABLE pd (
+        CREATE TABLE IF NOT EXISTS pd (
     date DATE,
     market VARCHAR(2),
     series VARCHAR(4),
@@ -76,12 +76,12 @@ def create_tables(con):
 );
 """)
 
-    print(out)
+    print(out.fetchall())
 
-    con.execute("DROP TABLE IF EXISTS sec;")
+    # con.execute("DROP TABLE IF EXISTS sec;")
 
     out = con.execute(""" 
-CREATE TABLE sec
+CREATE TABLE IF NOT EXISTS sec
  (
     symbol VARCHAR(20),
     series VARCHAR(4),
@@ -104,7 +104,7 @@ CREATE TABLE sec
 );
 """)
 
-    print(out)
+    print(out.fetchall())
 
 if __name__ == "__main__":
     create_tables(get_ducklake_conn())

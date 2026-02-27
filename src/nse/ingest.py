@@ -1,4 +1,4 @@
-from utils import get_ducklake_conn
+from nse.utils import get_ducklake_conn
 
 def merge_into_pd_table(bucket, date_today):
     con = get_ducklake_conn()
@@ -44,4 +44,5 @@ def merge_into_sec_table(bucket, date_today):
                 WHEN MATCHED THEN UPDATE 
                 WHEN NOT MATCHED THEN INSERT ;
 """
+    print(sql_st)
     out = con.execute(sql_st)

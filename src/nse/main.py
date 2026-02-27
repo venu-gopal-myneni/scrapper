@@ -1,14 +1,12 @@
-from extract import download_files
-from validate import validate_files, FOLDER_FILE_TRANSFORMS
+from nse.extract import download_files
+from nse.validate import validate_files, FOLDER_FILE_TRANSFORMS
 
-from ingest import merge_into_pd_table, merge_into_sec_table
+from nse.ingest import merge_into_pd_table, merge_into_sec_table
 from datetime import date
 import os
 
 
-date_today = date(
-    year=2026, month=2, day=20
-)  # date.today()  # date(year=2026, month=1, day=23)
+date_today = date.today()  # date(year=2026, month=1, day=23)
 date_folder = date_today.strftime("%d-%m-%Y")
 formatted_date_today_ddmmyy = date_today.strftime("%d%m%y")
 formatted_date_today_ddmmyyyy = date_today.strftime("%d%m%Y")

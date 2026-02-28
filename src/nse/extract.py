@@ -4,7 +4,7 @@ import requests
 from io import BytesIO
 from collections import defaultdict
 
-from utils import S3_CLIENT
+from nse.utils import S3_CLIENT
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -20,6 +20,7 @@ def download_files(urls: list[str], date_today: str, bucket: str) -> dict:
     keys_dict = defaultdict(list)
     for folder, url in urls.items():
         print(f"Downloading {folder} for date {date_today}")
+        print(f" URL : {url}")
         buffer = BytesIO()
 
         with requests.get(url, headers=HEADERS, stream=True, timeout=30) as r:

@@ -25,3 +25,7 @@ dev = [
     "pandas>=3.0.0",
     "pyarrow>=23.0.0",
 ]
+
+[project.scripts]
+nse = "nse.main:main"
+

@@ -1,5 +1,6 @@
 from nse.utils import get_ducklake_conn
 
+
 def merge_into_pd_table(bucket, date_today):
     con = get_ducklake_conn()
     sql_st = f"""

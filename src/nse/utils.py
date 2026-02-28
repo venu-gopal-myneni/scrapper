@@ -8,6 +8,7 @@ load_dotenv()
 
 BUCKET = os.getenv("S3_BUCKET")
 AWS_PROFILE = os.getenv("AWS_PROFILE")
+CATALOG = os.getenv("CATALOG")
 
 S3_CLIENT = boto3.client("s3")
 
@@ -37,7 +38,7 @@ def get_ducklake_conn():
                 """)
 
     # catalog_path = f"s3://{BUCKET}/ducklake/catalog.ducklake"
-    catalog_path = "catalog.ducklake"
+    catalog_path = f"{CATALOG}"
     data_path = f"s3://{BUCKET}/ducklake/data/"
 
     con.execute(f"""
@@ -105,6 +106,7 @@ CREATE TABLE IF NOT EXISTS sec
 """)
 
     print(out.fetchall())
+
 
 if __name__ == "__main__":
     create_tables(get_ducklake_conn())

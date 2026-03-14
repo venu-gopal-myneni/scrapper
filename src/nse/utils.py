@@ -7,8 +7,9 @@ import duckdb
 load_dotenv()
 
 BUCKET = os.getenv("S3_BUCKET")
-AWS_PROFILE = os.getenv("AWS_PROFILE")
+PROFILE = os.getenv("AWS_PROFILE")
 CATALOG = os.getenv("CATALOG")
+AWS_SERVER = os.getenv("AWS_SERVER")
 
 S3_CLIENT = boto3.client("s3")
 
@@ -33,11 +34,15 @@ def get_ducklake_conn():
 
     con.execute("LOAD ducklake")
 
-    con.execute(f"""
-    CREATE OR REPLACE SECRET secret (TYPE s3,PROVIDER credential_chain,CHAIN config,PROFILE '{AWS_PROFILE}');
-                """)
+    if AWS_SERVER == 'False':
+        con.execute(f"""
+        CREATE OR REPLACE SECRET secret (TYPE s3,PROVIDER credential_chain,CHAIN config,PROFILE '{PROFILE}');
+                    """)
+    else:
+        con.execute("""
+        CREATE OR REPLACE SECRET secret (TYPE s3,PROVIDER credential_chain);
+                    """)
 
-    # catalog_path = f"s3://{BUCKET}/ducklake/catalog.ducklake"
     catalog_path = f"{CATALOG}"
     data_path = f"s3://{BUCKET}/ducklake/data/"
 
@@ -106,7 +111,3 @@ CREATE TABLE IF NOT EXISTS sec
 """)
 
     print(out.fetchall())
-
-
-if __name__ == "__main__":
-    create_tables(get_ducklake_conn())

@@ -7,7 +7,7 @@ import duckdb
 load_dotenv()
 
 BUCKET = os.getenv("S3_BUCKET")
-PROFILE = os.getenv("AWS_PROFILE")
+PROFILE = os.getenv("PROFILE")
 CATALOG = os.getenv("CATALOG")
 AWS_SERVER = os.getenv("AWS_SERVER")
 

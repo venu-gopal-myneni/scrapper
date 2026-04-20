@@ -1,0 +1,35 @@
+
+name: Build and Deploy Python Wheel on EC2
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build wheel
+        run: uv build
+
+      - name: Copy wheel
+        run: |
+          scp dist/*.whl ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/nse
+
+      - name: Install wheel on EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            source /home/ec2-user/nse/.venv/bin/activate
+            pip install --upgrade /home/ec2-user/nse/*.whl
+            deactivate
+          '

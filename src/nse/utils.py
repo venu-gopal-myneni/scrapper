@@ -49,7 +49,10 @@ def get_ducklake_conn():
     con.execute(f"""
     ATTACH 'ducklake:{catalog_path}'
     AS lake
-    (DATA_PATH '{data_path}');
+    (
+    DATA_PATH '{data_path}',
+    AUTOMATIC_MIGRATION TRUE
+    );
     """)
 
     con.execute("USE lake")

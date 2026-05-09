@@ -11,13 +11,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Add uv to PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Clean old build artifacts
+        run: |
+          rm -rf dist/
+          rm -rf build/
+          rm -rf *.egg-info
 
       - name: Build wheel
         run: uv build
@@ -29,9 +36,16 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy wheel
+      - name: Clean old wheels on EC2
         run: |
-          scp dist/*.whl ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/nse
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            rm -f /home/ec2-user/nse/*.whl
+          '
+
+      - name: Copy wheel to EC2
+        run: |
+          scp dist/*.whl \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/nse
 
       - name: Install wheel on EC2
         run: |

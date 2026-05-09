@@ -7,16 +7,16 @@ name = "nse"
 version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 dependencies = [
-    "boto3",
+    "boto3>=1.42.25",
     "duckdb>=1.4.3",
-    "httpx",
-    "pandera[polars]",
-    "polars",
-    "python-dotenv",
-    "requests",
-    "s3fs",
+    "httpx>=0.28.1",
+    "pandera[polars]>=0.29.0",
+    "polars>=1.37.1",
+    "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
+    "s3fs>=2026.1.0",
 ]
 
 [dependency-groups]
@@ -28,4 +28,3 @@ dev = [
 
 [project.scripts]
 nse = "nse.main:main"
-

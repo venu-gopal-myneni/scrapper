@@ -51,6 +51,6 @@ jobs:
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
             source /home/ec2-user/nse/.venv/bin/activate
-            pip install --upgrade /home/ec2-user/nse/*.whl
+            python -m pip install /home/ec2-user/nse/*.whl --force-reinstall
             deactivate
           '

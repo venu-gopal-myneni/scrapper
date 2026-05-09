@@ -3,7 +3,8 @@ from nse.utils import get_ducklake_conn
 
 def merge_into_pd_table(bucket, date_today):
     con = get_ducklake_conn()
-    print("Count in pd before merge: ",con.execute("SELECT count(*) FROM pd").fetchall())
+    print("Count in pd before merge:")
+    print(con.execute("SELECT count(*) FROM pd").fetchall())
     sql_st = f"""
     
                 MERGE INTO pd AS t
@@ -27,13 +28,15 @@ def merge_into_pd_table(bucket, date_today):
     print(sql_st)
     con.execute(sql_st)
     con.commit()
-    print("Count in pd after merge: ",con.execute("SELECT count(*) FROM pd").fetchall())
+    print("Count in pd after merge:")
+    print(con.execute("SELECT count(*) FROM pd").fetchall())
     con.close()
 
 
 def merge_into_sec_table(bucket, date_today):
     con = get_ducklake_conn()
-    print("Count in sec before merge: ",con.execute("SELECT count(*) FROM sec").fetchall())
+    print("Count in sec before merge:")
+    print(con.execute("SELECT count(*) FROM sec").fetchall())
     sql_st = f"""
     
                 MERGE INTO sec AS t
@@ -53,5 +56,6 @@ def merge_into_sec_table(bucket, date_today):
     print(sql_st)
     con.execute(sql_st)
     con.commit()
-    print("Count in sec after merge: ",con.execute("SELECT count(*) FROM sec").fetchall())
+    print("Count in sec after merge:")
+    print(con.execute("SELECT count(*) FROM sec").fetchall())
     con.close()

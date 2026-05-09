@@ -17,7 +17,7 @@ def run_command():
         DocumentName="AWS-RunShellScript",
         Parameters={
             "commands": [
-                "bash /home/ec2-user/nse/run_job.sh"
+                "bash /home/ec2-user/nse/run_job.sh > /home/ec2-user/nse/log.txt 2>&1"
             ]
         }
     )
